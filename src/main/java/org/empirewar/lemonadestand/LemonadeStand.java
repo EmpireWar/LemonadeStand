@@ -24,7 +24,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 
 		saveDefaultConfig();
 
-		webServer = new WebServer();
+		webServer = new WebServer(this);
 		webServer.start();
 
 		try {

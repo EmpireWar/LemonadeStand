@@ -16,14 +16,22 @@ public class WebServer {
 	private final Gson gson;
 	private final Javalin app;
 
-	public WebServer() {
+	public WebServer(LemonadeStand plugin) {
 		gson = new GsonBuilder()
 				.registerTypeAdapter(Instant.class, new InstantAdapter())
 				.create();
 
 		app = Javalin.create().get("/hello", ctx -> ctx.result("Hello World"));
 
-		app.post("/webhook", ctx -> {
+		String key = plugin.getConfig().getString("store.key", "");
+		String path = "/webhook";
+		if (!key.isEmpty()) {
+			path += "/" + key;
+		} else {
+			plugin.getLogger().warning("LemonadeStand is running in a development environment (no webhook key).");
+		}
+
+		app.post(path, ctx -> {
 			// The Ko-Fi webhook sends the data as an urlencoded string
 			final String jsonBody = ctx.formParam("data");
 			Bukkit.getLogger().info("Received webhook: " + jsonBody);
