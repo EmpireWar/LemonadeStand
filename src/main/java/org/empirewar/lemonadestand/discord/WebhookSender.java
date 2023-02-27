@@ -47,15 +47,12 @@ public class WebhookSender {
         StringBuilder descriptionBuilder = new StringBuilder();
         if (order.isSubscriptionPayment()) {
             descriptionBuilder.append("This donation is a subscription.");
-            if (!order.isFirstSubscriptionPayment()) descriptionBuilder.append("\n");
         }
 
         if (order.isFirstSubscriptionPayment()) {
             descriptionBuilder.append(" This is their first subscription payment.");
             descriptionBuilder.append("\n");
         }
-
-        descriptionBuilder.append("Message: ").append(order.getMessage());
 
         if (order.getTierName() != null) {
             descriptionBuilder.append("\n");
@@ -65,6 +62,7 @@ public class WebhookSender {
         // Send and log (using embed)
         WebhookEmbed embed = new WebhookEmbedBuilder()
                 .setColor(12947200)
+                .addField(new WebhookEmbed.EmbedField(true, "Message", order.getMessage()))
                 .setDescription(descriptionBuilder.toString())
                 .setTimestamp(order.getTimestamp())
                 .setTitle(new WebhookEmbed.EmbedTitle(player.getName() + " donated " + order.getAmount() + " " + order.getCurrency() + "!", "https://ko-fi.com/empirewar"))
