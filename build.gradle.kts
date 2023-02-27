@@ -1,5 +1,6 @@
 plugins {
     java
+    id("maven-publish")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -14,7 +15,7 @@ dependencies {
     implementation("club.minnced:discord-webhooks:0.8.2")
 }
 
-group = "org.empirewar"
+group = "org.empirewar.lemonadestand"
 version = "1.0.0-SNAPSHOT"
 
 java {
@@ -38,5 +39,24 @@ tasks {
 
     shadowJar {
         archiveClassifier.set("")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("lemonadestand") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            name = "snapshots"
+            url = uri("https://repo.convallyria.com/empirewar/")
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
     }
 }
