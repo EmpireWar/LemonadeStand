@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.empirewar.lemonadestand.event.KoFiTransactionEvent;
 import org.empirewar.lemonadestand.gson.InstantAdapter;
 import org.empirewar.lemonadestand.kofi.ShopOrder;
@@ -34,9 +35,43 @@ public class WebServer {
 				return;
 			}
 
+			if (shopOrder.getMessage() == null) {
+				Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
+				ctx.status(200);
+				return;
+			}
+
+			// Remove all prefixing spaces
+			String message = shopOrder.getMessage().replaceAll("^\\s+", "");
+
+			// Remove all characters after a potential space (indicating the end of the username)
+			message = message.split(" ")[0];
+
+			// Check if the potential username is >= 3 characters long and <= 16 characters long
+			if (message.length() < 3 || message.length() > 16) {
+				Bukkit.getLogger().warning("Invalid username (too long): " + message);
+				ctx.status(200);
+				return;
+			}
+
+			// Validate the username character set (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_)
+			if (!message.matches("^[a-zA-Z0-9_]+$")) {
+				Bukkit.getLogger().warning("Invalid username (characters): " + message);
+				ctx.status(200);
+				return;
+			}
+
+			// Get the player from the cache
+			final OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(message);
+			if (player == null) {
+				Bukkit.getLogger().warning("Invalid username (not found): " + message);
+				ctx.status(200);
+				return;
+			}
+
 			// Dispatch event in the main thread
 			Bukkit.getScheduler().runTask(LemonadeStand.get(), () -> {
-				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(shopOrder));
+				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(player, shopOrder));
 			});
 
 			ctx.status(200); // return http status 200 OK

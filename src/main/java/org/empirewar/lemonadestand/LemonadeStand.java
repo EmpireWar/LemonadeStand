@@ -40,7 +40,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onWebHookReceive(KoFiTransactionEvent event) {
-		logger.info("Received order: " + event.getShopOrder().getKofiTransactionId().toString());
+		logger.info("Received order: " + event.getShopOrder().getKofiTransactionId().toString() + " for " + event.getPlayer().getName());
 	}
 
 }
