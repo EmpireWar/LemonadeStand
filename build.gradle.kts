@@ -11,6 +11,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
     implementation("io.javalin:javalin:5.3.2")
+    implementation("club.minnced:discord-webhooks:0.8.2")
 }
 
 group = "org.empirewar"
