@@ -36,7 +36,6 @@ tasks {
     }
 
     shadowJar {
-        minimize()
         archiveClassifier.set("")
     }
 }
