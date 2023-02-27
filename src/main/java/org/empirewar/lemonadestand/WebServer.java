@@ -58,7 +58,7 @@ public class WebServer {
 			}
 
 			String logInfo = shopOrder.getTimestamp() + ", " + shopOrder.getKofiTransactionId() + ", " + shopOrder.getMessage();
-			Files.writeString(file.toPath(), logInfo, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+			Files.writeString(file.toPath(), logInfo + "\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND);
 
 			if (shopOrder.getMessage() == null) {
 				Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
