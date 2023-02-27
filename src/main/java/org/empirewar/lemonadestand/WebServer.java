@@ -9,6 +9,10 @@ import org.empirewar.lemonadestand.event.KoFiTransactionEvent;
 import org.empirewar.lemonadestand.gson.InstantAdapter;
 import org.empirewar.lemonadestand.kofi.ShopOrder;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 
 public class WebServer {
@@ -42,6 +46,19 @@ public class WebServer {
 				ctx.status(400); // return http status 400 Bad Request
 				return;
 			}
+
+			File root = new File(plugin.getDataFolder() + "/logs");
+			if (!root.exists()) {
+				root.mkdirs();
+			}
+
+			File file = new File(root + "/transactions.log");
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			String logInfo = shopOrder.getTimestamp() + ", " + shopOrder.getKofiTransactionId() + ", " + shopOrder.getMessage();
+			Files.writeString(file.toPath(), logInfo, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
 
 			if (shopOrder.getMessage() == null) {
 				Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
