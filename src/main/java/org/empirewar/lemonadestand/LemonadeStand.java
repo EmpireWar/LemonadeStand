@@ -58,4 +58,5 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 			webhookSender.sendWebhook(event);
 		}
 	}
+
 }

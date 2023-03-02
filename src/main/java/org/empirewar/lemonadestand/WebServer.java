@@ -17,6 +17,8 @@ import java.time.Instant;
 
 public class WebServer {
 
+	private static final String VERIFICATION_TOKEN_CONFIG_PATH = "settings.verification-token";
+
 	private final Gson gson;
 	private final Javalin app;
 
@@ -27,19 +29,17 @@ public class WebServer {
 
 		app = Javalin.create().get("/hello", ctx -> ctx.result("Hello World"));
 
-		String key = plugin.getConfig().getString("store.key", "");
-		String path = "/webhook";
-		if (!key.isEmpty()) {
-			path += "/" + key;
-		} else {
-			plugin.getLogger().warning("LemonadeStand is running in a development environment (no webhook key).");
+		final String token = plugin.getConfig().getString(VERIFICATION_TOKEN_CONFIG_PATH);
+		if (token == null || token.isBlank()) {
+			plugin.getLogger().warning("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.");
 		}
 
-		app.post(path, ctx -> {
+		app.post("/webhook", ctx -> {
 			// The Ko-Fi webhook sends the data as an urlencoded string
 			final String jsonBody = ctx.formParam("data");
 			Bukkit.getLogger().info("Received webhook: " + jsonBody);
 
+			// Parse the webhook
 			final ShopOrder shopOrder = gson.fromJson(jsonBody, ShopOrder.class);
 			if (shopOrder == null) {
 				Bukkit.getLogger().warning("Failed to parse webhook");
@@ -47,18 +47,28 @@ public class WebServer {
 				return;
 			}
 
-			File root = new File(plugin.getDataFolder() + "/logs");
+			final File root = new File(plugin.getDataFolder() + File.separator + "logs");
 			if (!root.exists()) {
 				root.mkdirs();
 			}
 
-			File file = new File(root + "/transactions.log");
+			final File file = new File(root + File.separator + "transactions.log");
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 
-			String logInfo = shopOrder.getTimestamp() + ", " + shopOrder.getKofiTransactionId() + ", " + shopOrder.getMessage();
+			// todo: handle errors better (or at all)
+			final String logInfo = "[" + shopOrder.getTimestamp() + "] " + shopOrder.getKofiTransactionId() + ": " + shopOrder.getMessage();
 			Files.writeString(file.toPath(), logInfo + "\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+
+			// Verify the webhook
+			if (token != null && !token.isBlank()) {
+				if (!shopOrder.getVerificationToken().equals(token)) {
+					Bukkit.getLogger().warning("Invalid verification token");
+					ctx.status(401); // return http status 401 Unauthorized
+					return;
+				}
+			}
 
 			if (shopOrder.getMessage() == null) {
 				Bukkit.getLogger().warning("Missing message in payload: cannot fully process");

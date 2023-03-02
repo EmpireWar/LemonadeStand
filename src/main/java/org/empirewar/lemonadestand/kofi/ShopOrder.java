@@ -9,7 +9,7 @@ import java.util.UUID;
 public final class ShopOrder {
 
 	@SerializedName("verification_token")
-	private UUID verificationToken;
+	private String verificationToken;
 
 	@SerializedName("message_id")
 	private UUID messageId;
@@ -59,7 +59,7 @@ public final class ShopOrder {
 	@SerializedName("shipping")
 	private Shipping shipping;
 
-	public UUID getVerificationToken() {
+	public String getVerificationToken() {
 		return verificationToken;
 	}
 

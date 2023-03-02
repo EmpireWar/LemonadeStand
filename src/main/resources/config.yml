@@ -1,6 +1,3 @@
-discord:
-  # Discord webhook URL
-  webhook: ""
-store:
-  # Provide a unique webhook key, or none if in a development environment
-  key: ""
+settings:
+  webhook-url: ""  # Discord webhook URL
+  verification-token: ""  # Ko-Fi verification token

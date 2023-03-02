@@ -14,18 +14,17 @@ import java.util.concurrent.Executors;
 
 public class WebhookSender {
 
-    private final LemonadeStand plugin;
+    private static final String WEBHOOK_URL_CONFIG_PATH = "settings.webhook-url";
+
     private final WebhookClient client;
 
     public WebhookSender(LemonadeStand plugin) throws MalformedURLException {
-        this.plugin = plugin;
-
-        String configuredWebhook = plugin.getConfig().getString("discord.webhook");
+        String configuredWebhook = plugin.getConfig().getString(WEBHOOK_URL_CONFIG_PATH);
         // Make sure the URL is not blank and uses https
         if (configuredWebhook == null
-                || (configuredWebhook = configuredWebhook.strip()).isEmpty()
+                || configuredWebhook.isBlank()
                 || !configuredWebhook.startsWith("https")) {
-            throw new MalformedURLException("Webhook URL is empty or is not HTTPS.");
+            throw new MalformedURLException("Webhook URL is empty or does not use HTTPS");
         }
 
         // Using the builder
@@ -69,7 +68,7 @@ public class WebhookSender {
                 .setThumbnailUrl("https://mc-heads.net/avatar/" + player.getUniqueId())
                 .build();
 
-        client.send(embed)
-                .thenAccept((message) -> System.out.printf("Message with embed has been sent [%s]%n", message.getId()));
+        client.send(embed).thenAccept((message) -> System.out.printf("Message with embed has been sent [%s]%n", message.getId()));
     }
+
 }
