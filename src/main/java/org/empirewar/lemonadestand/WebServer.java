@@ -70,47 +70,56 @@ public class WebServer {
 				}
 			}
 
-			if (shopOrder.getMessage() == null) {
-				Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
-				ctx.status(200);
-				return;
-			}
-
-			// Remove all prefixing spaces
-			String message = shopOrder.getMessage().replaceAll("^\\s+", "");
-
-			// Remove all characters after a potential space (indicating the end of the username)
-			message = message.split(" ")[0];
-
-			// Check if the potential username is >= 3 characters long and <= 16 characters long
-			if (message.length() < 3 || message.length() > 16) {
-				Bukkit.getLogger().warning("Invalid username (too long): " + message);
-				ctx.status(200);
-				return;
-			}
-
-			// Validate the username character set (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_)
-			if (!message.matches("^[a-zA-Z0-9_]+$")) {
-				Bukkit.getLogger().warning("Invalid username (characters): " + message);
-				ctx.status(200);
-				return;
-			}
-
-			// Get the player from the cache
-			final OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(message);
+			OfflinePlayer player;
+			player = findPotentialUsername(shopOrder.getFromName());
+			// If we weren't able to resolve the from name as a player, then try the message
 			if (player == null) {
-				Bukkit.getLogger().warning("Invalid username (not found): " + message);
+				if (shopOrder.getMessage() == null) {
+					Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
+					ctx.status(200);
+					return;
+				}
+
+				player = findPotentialUsername(shopOrder.getMessage());
+			}
+
+			if (player == null) {
+				Bukkit.getLogger().warning("Invalid username (not found): " + shopOrder.getMessage());
 				ctx.status(200);
 				return;
 			}
 
 			// Dispatch event in the main thread
+			final OfflinePlayer finalPlayer = player;
 			Bukkit.getScheduler().runTask(LemonadeStand.get(), () -> {
-				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(player, shopOrder));
+				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(finalPlayer, shopOrder));
 			});
 
 			ctx.status(200); // return http status 200 OK
 		});
+	}
+
+	private OfflinePlayer findPotentialUsername(String str) {
+		// Remove all prefixing spaces
+		String message = str.replaceAll("^\\s+", "");
+
+		// Remove all characters after a potential space (indicating the end of the username)
+		message = message.split(" ")[0];
+
+		// Check if the potential username is >= 3 characters long and <= 16 characters long
+		if (message.length() < 3 || message.length() > 16) {
+			LemonadeStand.get().getLogger().warning("Invalid username (too long): " + message);
+			return null;
+		}
+
+		// Validate the username character set (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_)
+		if (!message.matches("^[a-zA-Z0-9_]+$")) {
+			LemonadeStand.get().getLogger().warning("Invalid username (characters): " + message);
+			return null;
+		}
+
+		// Get the player from the cache
+		return Bukkit.getOfflinePlayerIfCached(message);
 	}
 
 	public void start() {
