@@ -30,14 +30,15 @@ public class WebServer {
 		app = Javalin.create().get("/hello", ctx -> ctx.result("Hello World"));
 
 		final String token = plugin.getConfig().getString(VERIFICATION_TOKEN_CONFIG_PATH);
-		if (token == null || token.isBlank()) {
+		final boolean isDevelopment = token == null || token.isBlank();
+		if (isDevelopment) {
 			plugin.getLogger().warning("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.");
 		}
 
 		app.post("/webhook", ctx -> {
 			// The Ko-Fi webhook sends the data as an urlencoded string
 			final String jsonBody = ctx.formParam("data");
-			Bukkit.getLogger().info("Received webhook: " + jsonBody);
+			if (isDevelopment) Bukkit.getLogger().info("Received webhook: " + jsonBody);
 
 			// Parse the webhook
 			final ShopOrder shopOrder = gson.fromJson(jsonBody, ShopOrder.class);
@@ -108,7 +109,7 @@ public class WebServer {
 
 		// Check if the potential username is >= 3 characters long and <= 16 characters long
 		if (message.length() < 3 || message.length() > 16) {
-			LemonadeStand.get().getLogger().warning("Invalid username (too long): " + message);
+			LemonadeStand.get().getLogger().warning("Invalid username (too short/long): " + message);
 			return null;
 		}
 
