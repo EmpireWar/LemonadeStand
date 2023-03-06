@@ -20,7 +20,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 		// Plugin startup logic
 		INSTANCE = this;
 
-		logger.info("Doing crazy shit now");
+		getLogger().info("Doing crazy shit now");
 
 		saveDefaultConfig();
 
@@ -33,7 +33,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 
-		logger.info("Oki doki");
+		getLogger().info("Oki doki");
 
 		getServer().getPluginManager().registerEvents(this, this);
 
@@ -53,7 +53,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onWebHookReceive(KoFiTransactionEvent event) {
-		logger.info("Received order: " + event.getShopOrder().getKofiTransactionId().toString() + " for " + event.getPlayer().getName());
+		getLogger().info("Received order: " + event.getShopOrder().getKofiTransactionId().toString() + " for " + event.getPlayer().getName());
 		if (webhookSender != null) {
 			webhookSender.sendWebhook(event);
 		}
