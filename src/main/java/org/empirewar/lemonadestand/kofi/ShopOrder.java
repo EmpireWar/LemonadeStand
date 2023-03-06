@@ -1,6 +1,7 @@
 package org.empirewar.lemonadestand.kofi;
 
 import com.google.gson.annotations.SerializedName;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.util.List;
@@ -83,6 +84,7 @@ public final class ShopOrder {
 		return fromName;
 	}
 
+	@Nullable
 	public String getMessage() {
 		return message;
 	}
@@ -115,10 +117,12 @@ public final class ShopOrder {
 		return kofiTransactionId;
 	}
 
+	@Nullable
 	public List<ShopItem> getShopItems() {
 		return shopItems;
 	}
 
+	@Nullable
 	public String getTierName() {
 		return tierName;
 	}

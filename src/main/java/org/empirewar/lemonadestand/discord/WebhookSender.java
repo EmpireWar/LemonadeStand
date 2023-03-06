@@ -61,7 +61,7 @@ public class WebhookSender {
         // Send and log (using embed)
         WebhookEmbed embed = new WebhookEmbedBuilder()
                 .setColor(12947200)
-                .addField(new WebhookEmbed.EmbedField(true, "Message", order.getMessage()))
+                .addField(new WebhookEmbed.EmbedField(true, "Message", order.getMessage() == null ? "" : order.getMessage()))
                 .setDescription(descriptionBuilder.toString())
                 .setTimestamp(order.getTimestamp())
                 .setTitle(new WebhookEmbed.EmbedTitle(player.getName() + " donated " + order.getAmount() + " " + order.getCurrency() + "!", "https://ko-fi.com/empirewar"))
