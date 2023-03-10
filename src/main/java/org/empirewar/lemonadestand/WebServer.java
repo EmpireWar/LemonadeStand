@@ -9,10 +9,6 @@ import org.empirewar.lemonadestand.event.KoFiTransactionEvent;
 import org.empirewar.lemonadestand.gson.InstantAdapter;
 import org.empirewar.lemonadestand.kofi.ShopOrder;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 
 public class WebServer {
@@ -38,46 +34,32 @@ public class WebServer {
 		app.post("/webhook", ctx -> {
 			// The Ko-Fi webhook sends the data as an urlencoded string
 			final String jsonBody = ctx.formParam("data");
-			if (isDevelopment) Bukkit.getLogger().info("Received webhook: " + jsonBody);
+			if (isDevelopment) plugin.getLogger().info("Received webhook: " + jsonBody);
 
 			// Parse the webhook
 			final ShopOrder shopOrder = gson.fromJson(jsonBody, ShopOrder.class);
 			if (shopOrder == null) {
-				Bukkit.getLogger().warning("Failed to parse webhook");
-				ctx.status(400); // return http status 400 Bad Request
+				plugin.getLogger().warning("Failed to parse webhook");
+				ctx.status(400); // Return http status 400 Bad Request (invalid json)
 				return;
 			}
-
-			final File root = new File(plugin.getDataFolder() + File.separator + "logs");
-			if (!root.exists()) {
-				root.mkdirs();
-			}
-
-			final File file = new File(root + File.separator + "transactions.log");
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			// todo: handle errors better (or at all)
-			final String logInfo = "[" + shopOrder.getTimestamp() + "] " + shopOrder.getKofiTransactionId() + ": " + shopOrder.getMessage();
-			Files.writeString(file.toPath(), logInfo + "\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND);
 
 			// Verify the webhook
 			if (token != null && !token.isBlank()) {
 				if (!shopOrder.getVerificationToken().equals(token)) {
-					Bukkit.getLogger().warning("Invalid verification token");
-					ctx.status(401); // return http status 401 Unauthorized
+					plugin.getLogger().warning("Invalid verification token");
+					ctx.status(401);  // Return http status 401 Unauthorized (invalid token)
 					return;
 				}
 			}
 
 			OfflinePlayer player;
 			player = findPotentialUsername(shopOrder.getFromName());
-			// If we weren't able to resolve the from name as a player, then try the message
+			// If we weren't able to resolve the "from name" as a player, then try the message
 			if (player == null) {
 				if (shopOrder.getMessage() == null) {
-					Bukkit.getLogger().warning("Missing message in payload: cannot fully process");
-					ctx.status(200);
+					plugin.getLogger().warning("Missing message in payload: cannot fully process");
+					ctx.status(200);  // Not an error, just not a player we can process
 					return;
 				}
 
@@ -85,14 +67,15 @@ public class WebServer {
 			}
 
 			if (player == null) {
-				Bukkit.getLogger().warning("Invalid username (not found): " + shopOrder.getMessage());
-				ctx.status(200);
+				plugin.getLogger().warning("Invalid username (not found)! from_name='" +shopOrder.getFromName() + "' message='" + shopOrder.getMessage() + "'");
+				ctx.status(200);  // Not an error, just not a player we can process
 				return;
 			}
 
 			// Dispatch event in the main thread
 			final OfflinePlayer finalPlayer = player;
 			Bukkit.getScheduler().runTask(LemonadeStand.get(), () -> {
+				plugin.getTransactionLogger().info("Processing order " + shopOrder.getKofiTransactionId() + " of " + finalPlayer.getName() + ": " + shopOrder.getAmount() + " " + shopOrder.getCurrency());
 				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(finalPlayer, shopOrder));
 			});
 
@@ -115,7 +98,7 @@ public class WebServer {
 
 		// Validate the username character set (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_)
 		if (!message.matches("^[a-zA-Z0-9_]+$")) {
-			LemonadeStand.get().getLogger().warning("Invalid username (characters): " + message);
+			LemonadeStand.get().getLogger().warning("Invalid username (char. set): " + message);
 			return null;
 		}
 
