@@ -68,7 +68,7 @@ public class WebhookSender {
                 .setThumbnailUrl("https://mc-heads.net/avatar/" + player.getUniqueId())
                 .build();
 
-        client.send(embed).thenAccept((message) -> System.out.printf("Message with embed has been sent [%s]%n", message.getId()));
+        client.send(embed).thenAccept((message) -> LemonadeStand.get().getLogger().info("Message with embed has been sent [" + message.getId() + "]"));
     }
 
 }

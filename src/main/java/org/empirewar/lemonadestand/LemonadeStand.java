@@ -6,11 +6,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.empirewar.lemonadestand.discord.WebhookSender;
 import org.empirewar.lemonadestand.event.KoFiTransactionEvent;
 
+import java.io.File;
 import java.net.MalformedURLException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 public final class LemonadeStand extends JavaPlugin implements Listener {
 
 	private static LemonadeStand INSTANCE;
+
+	private Logger transactionLogger;
 
 	private WebServer webServer;
 	private WebhookSender webhookSender;
@@ -20,12 +25,21 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 		// Plugin startup logic
 		INSTANCE = this;
 
-		getLogger().info("Doing crazy shit now");
+		try {
+			transactionLogger = Logger.getLogger("TransactionLogger");
+			FileHandler fileHandler = new FileHandler(getDataFolder() + File.separator + "logs" + File.separator + "transactions.log", true);
+			transactionLogger.addHandler(fileHandler);
+			transactionLogger.setUseParentHandlers(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		saveDefaultConfig();
 
+		getLogger().info("Starting web server...");
 		webServer = new WebServer(this);
 		webServer.start();
+		getLogger().info("Web server started!");
 
 		try {
 			webhookSender = new WebhookSender(this);
@@ -33,10 +47,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 
-		getLogger().info("Oki doki");
-
 		getServer().getPluginManager().registerEvents(this, this);
-
 	}
 
 	@Override
@@ -51,9 +62,13 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 		return INSTANCE;
 	}
 
+	public Logger getTransactionLogger() {
+		return transactionLogger;
+	}
+
 	@EventHandler
 	public void onWebHookReceive(KoFiTransactionEvent event) {
-		getLogger().info("Received order: " + event.getShopOrder().getKofiTransactionId().toString() + " for " + event.getPlayer().getName());
+		getLogger().info("Sending webhook...");
 		if (webhookSender != null) {
 			webhookSender.sendWebhook(event);
 		}
