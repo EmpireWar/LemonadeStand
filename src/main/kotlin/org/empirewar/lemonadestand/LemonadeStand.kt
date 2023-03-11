@@ -13,10 +13,10 @@ import java.util.logging.Logger
 
 class LemonadeStand : JavaPlugin(), Listener {
 
-    var transactionLogger: Logger? = null
+    lateinit var transactionLogger: Logger
         private set
-    private var webServer: WebServer? = null
-    private var webhookSender: WebhookSender? = null
+    private lateinit var webServer: WebServer
+    private lateinit var webhookSender: WebhookSender
 
     override fun onEnable() {
         // Plugin startup logic
@@ -36,8 +36,8 @@ class LemonadeStand : JavaPlugin(), Listener {
             transactionLogger = Logger.getLogger("TransactionLogger")
             val fileHandler = FileHandler(logFile.path, true)
             fileHandler.formatter = PrettyFormatter()
-            transactionLogger!!.addHandler(fileHandler)
-            transactionLogger!!.useParentHandlers = false
+            transactionLogger.addHandler(fileHandler)
+            transactionLogger.useParentHandlers = false
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -46,7 +46,7 @@ class LemonadeStand : JavaPlugin(), Listener {
 
         getLogger().info("Starting web server...")
         webServer = WebServer(this)
-        webServer!!.start()
+        webServer.start()
         getLogger().info("Web server started!")
 
         // Initialise webhook sending, if valid
@@ -61,16 +61,14 @@ class LemonadeStand : JavaPlugin(), Listener {
 
     override fun onDisable() {
         // Plugin shutdown logic
-        webServer!!.stop()
-        webhookSender!!.stop()
+        webServer.stop()
+        webhookSender.stop()
     }
 
     @EventHandler
     fun onWebHookReceive(event: KoFiTransactionEvent) {
         getLogger().info("Sending webhook...")
-        if (webhookSender != null) {
-            webhookSender!!.sendWebhook(event)
-        }
+        webhookSender.sendWebhook(event)
     }
 
     companion object {
