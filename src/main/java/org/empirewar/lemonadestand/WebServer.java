@@ -75,7 +75,7 @@ public class WebServer {
 			// Dispatch event in the main thread
 			final OfflinePlayer finalPlayer = player;
 			Bukkit.getScheduler().runTask(LemonadeStand.get(), () -> {
-				plugin.getTransactionLogger().info("Processing order " + shopOrder.getKofiTransactionId() + " of " + finalPlayer.getName() + ": " + shopOrder.getAmount() + " " + shopOrder.getCurrency());
+				plugin.getTransactionLogger().info("Processing order '" + shopOrder.getKofiTransactionId() + "' for " + finalPlayer.getName() + ": " + shopOrder.getAmount() + " " + shopOrder.getCurrency());
 				Bukkit.getPluginManager().callEvent(new KoFiTransactionEvent(finalPlayer, shopOrder));
 			});
 
