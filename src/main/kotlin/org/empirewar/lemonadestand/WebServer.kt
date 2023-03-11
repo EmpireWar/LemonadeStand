@@ -70,7 +70,7 @@ class WebServer(plugin: LemonadeStand) {
             // Dispatch event in the main thread
             val finalPlayer: OfflinePlayer = player
             Bukkit.getScheduler().runTask(LemonadeStand.get(), Runnable {
-                plugin.transactionLogger?.info("Processing order '${shopOrder.kofiTransactionId}' for " + finalPlayer.name + ": ${shopOrder.amount} ${shopOrder.currency}")
+                plugin.transactionLogger.info("Processing order '${shopOrder.kofiTransactionId}' for " + finalPlayer.name + ": ${shopOrder.amount} ${shopOrder.currency}")
                 Bukkit.getPluginManager().callEvent(KoFiTransactionEvent(finalPlayer, shopOrder))
             })
             ctx.status(200) // return http status 200 OK
