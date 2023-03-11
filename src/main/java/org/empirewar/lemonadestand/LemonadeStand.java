@@ -10,6 +10,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public final class LemonadeStand extends JavaPlugin implements Listener {
 
@@ -26,8 +27,19 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 		INSTANCE = this;
 
 		try {
+			File logsFolder = new File(getDataFolder() + File.separator + "logs");
+			if (!logsFolder.exists()) {
+				logsFolder.mkdirs();
+			}
+
+			File logFile = new File(logsFolder + File.separator + "transactions.log");
+			if (!logFile.exists()) {
+				logFile.createNewFile();
+			}
+
 			transactionLogger = Logger.getLogger("TransactionLogger");
-			FileHandler fileHandler = new FileHandler(getDataFolder() + File.separator + "logs" + File.separator + "transactions.log", true);
+			FileHandler fileHandler = new FileHandler(logFile.getPath(), true);
+			fileHandler.setFormatter(new SimpleFormatter());
 			transactionLogger.addHandler(fileHandler);
 			transactionLogger.setUseParentHandlers(false);
 		} catch (Exception e) {
