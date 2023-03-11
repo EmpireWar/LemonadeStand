@@ -5,12 +5,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.empirewar.lemonadestand.discord.WebhookSender;
 import org.empirewar.lemonadestand.event.KoFiTransactionEvent;
+import org.empirewar.lemonadestand.logging.PrettyFormatter;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public final class LemonadeStand extends JavaPlugin implements Listener {
 
@@ -39,7 +39,7 @@ public final class LemonadeStand extends JavaPlugin implements Listener {
 
 			transactionLogger = Logger.getLogger("TransactionLogger");
 			FileHandler fileHandler = new FileHandler(logFile.getPath(), true);
-			fileHandler.setFormatter(new SimpleFormatter());
+			fileHandler.setFormatter(new PrettyFormatter());
 			transactionLogger.addHandler(fileHandler);
 			transactionLogger.setUseParentHandlers(false);
 		} catch (Exception e) {
