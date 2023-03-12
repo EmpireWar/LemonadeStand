@@ -12,6 +12,8 @@ class KoFiTransactionEvent(val player: OfflinePlayer, val shopOrder: ShopOrder) 
     }
 
     companion object {
+
+        @JvmStatic
         val handlerList = HandlerList()
     }
 }
