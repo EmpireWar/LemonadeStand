@@ -7,4 +7,4 @@
 | 1.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
-Email `admin<at>empirewar.org`.
+Email `security<at>empirewar.org`.
