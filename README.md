@@ -61,8 +61,8 @@ We recommend you use [Insomnia](https://insomnia.rest/download) for testing.
 Create a new `HTTP Request`, set it to use `Post`, and the URL as the plugin webhook endpoint.
 
 Set the body to `JSON` and paste the following example into it:
-```json lines
-data = {
+```json
+{
     "amount": "20.00",
     "currency": "EUR",
     "email": "jo.example@example.com",
@@ -83,7 +83,9 @@ data = {
 }
 ```
 
-Then change the `JSON` to `Form URL Encoded`. Make sure in the field key `data` there are no preceding or trailing spaces.
+Then change the `JSON` to `Form URL Encoded`.
+
+For the field name, set it to `data`, making sure there are no preceding or trailing spaces.
 
 Click send.
 
