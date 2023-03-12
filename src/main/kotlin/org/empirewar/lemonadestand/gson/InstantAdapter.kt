@@ -7,13 +7,14 @@ import java.io.IOException
 import java.time.Instant
 
 class InstantAdapter : TypeAdapter<Instant>() {
+
     @Throws(IOException::class)
-    override fun write(out: JsonWriter, value: Instant) {
-        out.value(value.toString())
+    override fun write(writer: JsonWriter, value: Instant) {
+        writer.value(value.toString())
     }
 
     @Throws(IOException::class)
-    override fun read(`in`: JsonReader): Instant {
-        return Instant.parse(`in`.nextString())
+    override fun read(reader: JsonReader): Instant {
+        return Instant.parse(reader.nextString())
     }
 }

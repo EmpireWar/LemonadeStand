@@ -9,6 +9,8 @@ import java.util.logging.SimpleFormatter
 
 class PrettyFormatter : SimpleFormatter() {
 
+    // SimpleFormatter doesn't have an easy way to just change the format regex it seems
+    // So unfortunately we have to do this override
     override fun format(record: LogRecord): String {
         val zdt = ZonedDateTime.ofInstant(
             record.instant, ZoneId.systemDefault()

@@ -16,7 +16,8 @@ class WebServer(plugin: LemonadeStand) {
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Instant::class.java, InstantAdapter())
         .create()
-    private val app: Javalin = Javalin.create()["/hello", { ctx: Context -> ctx.result("Hello World") }]
+
+    private val app: Javalin = Javalin.create()
 
     init {
         val token = plugin.config.getString(VERIFICATION_TOKEN_CONFIG_PATH)
@@ -60,9 +61,9 @@ class WebServer(plugin: LemonadeStand) {
                 player = findPotentialUsername(shopOrder.message)
             }
 
+            // If neither "from name" nor "message" contained a valid username, fail and return
             if (player == null) {
-                plugin.getLogger()
-                    .warning("Invalid username (not found)! from_name='${shopOrder.fromName}' message='${shopOrder.message}'")
+                plugin.getLogger().warning("Invalid username (not found)! from_name='${shopOrder.fromName}' message='${shopOrder.message}'")
                 ctx.status(200) // Not an error, just not a player we can process
                 return@post
             }
@@ -103,7 +104,7 @@ class WebServer(plugin: LemonadeStand) {
     }
 
     fun start() {
-        app.start(7000)
+        app.start(LemonadeStand.get().config.getInt("settings.port", 7000))
     }
 
     fun stop() {
