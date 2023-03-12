@@ -7,4 +7,6 @@
 | 1.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
-Email `security<at>empirewar.org`.
+Use the GitHub private vulnerability reporting feature at https://github.com/EmpireWar/LemonadeStand/security/advisories.
+
+Or, email `security<at>empirewar.org`.
