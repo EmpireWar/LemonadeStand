@@ -85,4 +85,6 @@ data = {
 
 Then change the `JSON` to `Form URL Encoded`. Make sure in the field key `data` there are no preceding or trailing spaces.
 
+Click send.
+
 You should see something like `[LemonadeStand] Invalid username (not found)! from_name='Notch' message='Notch is based'` in your console.

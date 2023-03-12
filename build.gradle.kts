@@ -53,7 +53,7 @@ publishing {
     repositories {
         maven {
             name = "snapshots"
-            url = uri("https://repo.convallyria.com/empirewar/")
+            url = uri("https://repo.convallyria.com/snapshots/")
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
