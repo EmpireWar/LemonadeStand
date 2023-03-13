@@ -17,7 +17,7 @@ dependencies {
 }
 
 group = "org.empirewar.lemonadestand"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.1-SNAPSHOT"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
