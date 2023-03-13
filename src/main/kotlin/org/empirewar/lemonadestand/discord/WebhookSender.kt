@@ -62,15 +62,15 @@ class WebhookSender(plugin: LemonadeStand) {
             .setTimestamp(order.timestamp)
             .setTitle(
                 EmbedTitle(
-                    player.name + " donated " + order.amount + " " + order.currency + "!",
+                    "${player.name} donated ${order.amount} ${order.currency}!",
                     "https://ko-fi.com/empirewar"
                 )
             )
-            .setThumbnailUrl("https://mc-heads.net/avatar/" + player.uniqueId)
+            .setThumbnailUrl("https://mc-heads.net/avatar/${player.uniqueId}")
             .build()
 
         client.send(embed).thenAccept { message: ReadonlyMessage ->
-            LemonadeStand.get().getLogger().info("Message with embed has been sent [" + message.id + "]")
+            LemonadeStand.get().getLogger().info("Message with embed has been sent [${message.id}]")
         }
     }
 
