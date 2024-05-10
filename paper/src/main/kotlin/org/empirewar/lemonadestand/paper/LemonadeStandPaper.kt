@@ -67,7 +67,7 @@ class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
             webhookSender = WebhookSender(this)
         } catch (e: MalformedURLException) {
             // There isn't a valid webhook
-            logger().warning("Webhook URL was invalid: ${e.message}")
+            logger().warn("Webhook URL was invalid: ${e.message}")
         }
 
         server.pluginManager.registerEvents(this, this)
@@ -137,8 +137,8 @@ class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
         return rootNode
     }
 
-    override fun logger(): Logger {
-        return logger
+    override fun logger(): org.slf4j.Logger {
+        return slF4JLogger
     }
 
     override fun transactionLogger(): Logger {

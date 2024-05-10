@@ -10,6 +10,7 @@ import org.empirewar.lemonadestand.scheduler.PlatformScheduler
 import org.empirewar.lemonadestand.sponge.event.KoFiTransactionEvent
 import org.empirewar.lemonadestand.sponge.event.SpongeEventCaller
 import org.empirewar.lemonadestand.sponge.scheduler.SpongeScheduler
+import org.slf4j.LoggerFactory
 import org.spongepowered.api.Server
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.config.ConfigDir
@@ -30,14 +31,12 @@ import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.logging.FileHandler
-import java.util.logging.Level
 import java.util.logging.Logger
 
 class LemonadeStandSponge @Inject constructor(
     pluginContainer: PluginContainer,
     @ConfigDir(sharedRoot = false)
-    private val dataFolder: Path,
-    private val logger: Logger
+    private val dataFolder: Path
 ) : LemonadeStand<User> {
 
     private lateinit var transactionLogger: Logger
@@ -87,7 +86,7 @@ class LemonadeStandSponge @Inject constructor(
             webhookSender = WebhookSender(this)
         } catch (e: MalformedURLException) {
             // There isn't a valid webhook
-            logger().warning("Webhook URL was invalid: ${e.message}")
+            logger().warn("Webhook URL was invalid: ${e.message}")
         }
     }
 
@@ -119,7 +118,7 @@ class LemonadeStandSponge @Inject constructor(
             loader = YamlConfigurationLoader.builder().path(configPath).build()
             rootNode = loader.load()
         } catch (e: IOException) {
-            logger.log(Level.SEVERE, "Error loading config", e)
+            logger.error("Error loading config", e)
         }
     }
 
@@ -165,7 +164,9 @@ class LemonadeStandSponge @Inject constructor(
         return rootNode
     }
 
-    override fun logger(): Logger {
+    private val logger: org.slf4j.Logger = LoggerFactory.getLogger("LemonadeStand")
+
+    override fun logger(): org.slf4j.Logger {
         return logger
     }
 
