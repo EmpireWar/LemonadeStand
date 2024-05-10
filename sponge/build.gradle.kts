@@ -21,7 +21,7 @@ sponge {
         displayName("LemonadeStand")
         entrypoint("org.empirewar.lemonadestand.sponge.LemonadeStandSponge")
         description("Accept incoming Ko-Fi webhooks and allow further processing.")
-        license("GPL-3.0")
+        license("MIT")
         version(project.version.toString())
         dependency("spongeapi") {
             loadOrder(PluginDependency.LoadOrder.AFTER)

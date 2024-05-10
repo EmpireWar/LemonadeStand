@@ -27,8 +27,7 @@ import java.util.logging.Logger
 
 class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
 
-    lateinit var transactionLogger: Logger
-        private set
+    private lateinit var transactionLogger: Logger
     private lateinit var webServer: WebServer<OfflinePlayer>
     private var webhookSender: WebhookSender? = null
 
