@@ -30,7 +30,6 @@ class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
     lateinit var transactionLogger: Logger
         private set
     private lateinit var webServer: WebServer<OfflinePlayer>
-    private lateinit var config: ConfigurationNode
     private var webhookSender: WebhookSender? = null
 
     override fun onEnable() {
@@ -136,7 +135,7 @@ class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
     }
 
     override fun config(): ConfigurationNode {
-        return config
+        return rootNode
     }
 
     override fun logger(): Logger {
