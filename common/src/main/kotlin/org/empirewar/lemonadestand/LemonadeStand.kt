@@ -17,7 +17,7 @@ interface LemonadeStand<P> {
 
     fun config(): ConfigurationNode
 
-    fun logger(): Logger
+    fun logger(): org.slf4j.Logger
 
     fun transactionLogger(): Logger
 }

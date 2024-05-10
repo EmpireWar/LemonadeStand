@@ -22,7 +22,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
         val token = plugin.config().getString(VERIFICATION_TOKEN_CONFIG_PATH)
         val isDevelopment = token.isNullOrBlank()
         if (isDevelopment) {
-            plugin.logger().warning("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.")
+            plugin.logger().warn("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.")
         }
 
         app.post("/webhook") { ctx: Context ->
@@ -33,7 +33,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
             // Parse the webhook
             val shopOrder = gson.fromJson(jsonBody, ShopOrder::class.java)
             if (shopOrder == null) {
-                plugin.logger().warning("Failed to parse webhook")
+                plugin.logger().warn("Failed to parse webhook")
                 ctx.status(400) // Return http status 400 Bad Request (invalid json)
                 return@post
             }
@@ -41,7 +41,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
             // Verify the webhook
             if (!isDevelopment) {
                 if (shopOrder.verificationToken != token) {
-                    plugin.logger().warning("Invalid verification token")
+                    plugin.logger().warn("Invalid verification token")
                     ctx.status(401) // Return http status 401 Unauthorized (invalid token)
                     return@post
                 }
@@ -53,7 +53,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
             // If we weren't able to resolve the "from name" as a player, then try the message
             if (player == null) {
                 if (shopOrder.message == null) {
-                    plugin.logger().warning("Missing message in payload: cannot fully process")
+                    plugin.logger().warn("Missing message in payload: cannot fully process")
                     ctx.status(200) // Not an error, just not a player we can process
                     return@post
                 }
@@ -62,7 +62,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
 
             // If neither "from name" nor "message" contained a valid username, fail and return
             if (player == null) {
-                plugin.logger().warning("Invalid username (not found)! from_name='${shopOrder.fromName}' message='${shopOrder.message}'")
+                plugin.logger().warn("Invalid username (not found)! from_name='${shopOrder.fromName}' message='${shopOrder.message}'")
                 ctx.status(200) // Not an error, just not a player we can process
                 return@post
             }
@@ -88,13 +88,13 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
 
         // Check if the potential username is >= 3 characters long and <= 16 characters long
         if (message.length < 3 || message.length > 16) {
-            plugin.logger().warning("Invalid username (too short/long): $message")
+            plugin.logger().warn("Invalid username (too short/long): $message")
             return null
         }
 
         // Validate the username character set (abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_)
         if (!message.matches("^[a-zA-Z0-9_]+$".toRegex())) {
-            plugin.logger().warning("Invalid username (char. set): $message")
+            plugin.logger().warn("Invalid username (char. set): $message")
             return null
         }
 

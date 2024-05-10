@@ -33,6 +33,8 @@ project.version = "1.0.1-SNAPSHOT"
 dependencies {
     implementation("io.javalin:javalin:6.1.3")
     implementation("club.minnced:discord-webhooks:0.8.2")
+    compileOnly("org.slf4j:slf4j-api:2.0.12")
+    testImplementation("org.slf4j:slf4j-api:2.0.12")
     compileOnly("com.google.code.gson:gson:2.10.1")
     testImplementation("com.google.code.gson:gson:2.10.1")
     compileOnly("org.spongepowered:configurate-yaml:4.1.2")
