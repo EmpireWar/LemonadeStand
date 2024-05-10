@@ -7,16 +7,17 @@ import club.minnced.discord.webhook.send.WebhookEmbed.EmbedField
 import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import org.empirewar.lemonadestand.LemonadeStand
-import org.empirewar.lemonadestand.event.KoFiTransactionEvent
+import org.empirewar.lemonadestand.kofi.ShopOrder
 import java.net.MalformedURLException
+import java.util.UUID
 import java.util.concurrent.Executors
 
-class WebhookSender(plugin: LemonadeStand) {
+class WebhookSender(private val plugin: LemonadeStand<*>) {
 
     private val client: WebhookClient
 
     init {
-        val configuredWebhook = plugin.config.getString(WEBHOOK_URL_CONFIG_PATH)
+        val configuredWebhook = plugin.config().node(WEBHOOK_URL_CONFIG_PATH).getString("")
         // Make sure the URL is not blank and uses https
         if (configuredWebhook.isNullOrBlank()
             || !configuredWebhook.startsWith("https")
@@ -35,10 +36,7 @@ class WebhookSender(plugin: LemonadeStand) {
         client.close()
     }
 
-    fun sendWebhook(event: KoFiTransactionEvent) {
-        val player = event.player
-        val order = event.shopOrder
-
+    fun sendEmbed(playerName: String, playerId: UUID, order: ShopOrder) {
         val descriptionBuilder = StringBuilder()
         if (order.isSubscriptionPayment) {
             descriptionBuilder.append("This donation is a subscription.")
@@ -62,15 +60,15 @@ class WebhookSender(plugin: LemonadeStand) {
             .setTimestamp(order.timestamp)
             .setTitle(
                 EmbedTitle(
-                    "${player.name} donated ${order.amount} ${order.currency}!",
-                    "https://ko-fi.com/empirewar"
+                    "$playerName donated ${order.amount} ${order.currency}!",
+                    plugin.config().node("kofi-url").getString("")
                 )
             )
-            .setThumbnailUrl("https://mc-heads.net/avatar/${player.uniqueId}")
+            .setThumbnailUrl("https://mc-heads.net/avatar/$playerId")
             .build()
 
         client.send(embed).thenAccept { message: ReadonlyMessage ->
-            LemonadeStand.get().getLogger().info("Message with embed has been sent [${message.id}]")
+            plugin.logger().info("Message with embed has been sent [${message.id}]")
         }
     }
 
