@@ -40,8 +40,7 @@ class LemonadeStandSponge @Inject constructor(
     private val logger: Logger
 ) : LemonadeStand<User> {
 
-    lateinit var transactionLogger: Logger
-        private set
+    private lateinit var transactionLogger: Logger
     private lateinit var webServer: WebServer<User>
     private var webhookSender: WebhookSender? = null
 

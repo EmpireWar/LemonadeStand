@@ -26,26 +26,17 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") // Paper
     maven("https://repo.convallyria.com/snapshots/")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
 project.version = "1.0.1-SNAPSHOT"
 
 dependencies {
-    constraints {
-        // Define dependency versions as constraints
-        compileOnly("net.kyori:adventure-api:4.16.0")
-        testImplementation("net.kyori:adventure-api:4.16.0")
-    }
-
     implementation("io.javalin:javalin:6.1.3")
     implementation("club.minnced:discord-webhooks:0.8.2")
     compileOnly("com.google.code.gson:gson:2.10.1")
     testImplementation("com.google.code.gson:gson:2.10.1")
     compileOnly("org.spongepowered:configurate-yaml:4.1.2")
     testImplementation("org.spongepowered:configurate-yaml:4.1.2")
-    compileOnly("net.kyori:adventure-api")
-    testImplementation("net.kyori:adventure-api")
 }
 
 testing {
