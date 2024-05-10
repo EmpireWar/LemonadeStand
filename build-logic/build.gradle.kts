@@ -20,5 +20,4 @@ dependencies {
     implementation("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
     implementation("net.kyori:blossom:2.1.0")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-    implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:4.3.0")
 }
