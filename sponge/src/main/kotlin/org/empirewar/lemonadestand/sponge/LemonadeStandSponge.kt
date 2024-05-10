@@ -1,6 +1,5 @@
 package org.empirewar.lemonadestand.sponge
 
-import org.empirewar.lemonadestand.sponge.event.KoFiTransactionEvent
 import com.google.inject.Inject
 import org.empirewar.lemonadestand.LemonadeStand
 import org.empirewar.lemonadestand.WebServer
@@ -8,6 +7,7 @@ import org.empirewar.lemonadestand.discord.WebhookSender
 import org.empirewar.lemonadestand.event.EventCaller
 import org.empirewar.lemonadestand.logging.PrettyFormatter
 import org.empirewar.lemonadestand.scheduler.PlatformScheduler
+import org.empirewar.lemonadestand.sponge.event.KoFiTransactionEvent
 import org.empirewar.lemonadestand.sponge.event.SpongeEventCaller
 import org.empirewar.lemonadestand.sponge.scheduler.SpongeScheduler
 import org.spongepowered.api.Server
@@ -26,6 +26,7 @@ import java.io.File
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URI
+import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.logging.FileHandler
@@ -42,7 +43,6 @@ class LemonadeStandSponge @Inject constructor(
     lateinit var transactionLogger: Logger
         private set
     private lateinit var webServer: WebServer<User>
-    private lateinit var config: ConfigurationNode
     private var webhookSender: WebhookSender? = null
 
     private var pluginContainer: PluginContainer? = pluginContainer
@@ -107,10 +107,15 @@ class LemonadeStandSponge @Inject constructor(
     private fun loadConfig() {
         try {
             val configPath: Path = dataFolder.resolve("config.yml")
-            Files.copy(
-                pluginContainer!!.openResource(URI.create("/config.yml")).orElseThrow(),
-                configPath
-            )
+            try {
+                Files.copy(
+                    pluginContainer!!.openResource(URI.create("/config.yml")).orElseThrow(),
+                    configPath
+                )
+            } catch (ignored: FileAlreadyExistsException) {
+            } catch (e: IOException) {
+                throw RuntimeException(e)
+            }
 
             loader = YamlConfigurationLoader.builder().path(configPath).build()
             rootNode = loader.load()
@@ -158,7 +163,7 @@ class LemonadeStandSponge @Inject constructor(
     }
 
     override fun config(): ConfigurationNode {
-        return config
+        return rootNode
     }
 
     override fun logger(): Logger {

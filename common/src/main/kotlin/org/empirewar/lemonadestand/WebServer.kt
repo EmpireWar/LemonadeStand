@@ -14,7 +14,9 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
         .registerTypeAdapter(Instant::class.java, InstantAdapter())
         .create()
 
-    private val app: Javalin = Javalin.create()
+    private val app: Javalin = Javalin.create { config ->
+        config.showJavalinBanner = false
+    }
 
     init {
         val token = plugin.config().getString(VERIFICATION_TOKEN_CONFIG_PATH)

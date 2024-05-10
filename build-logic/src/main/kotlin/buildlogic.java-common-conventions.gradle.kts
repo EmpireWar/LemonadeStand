@@ -38,7 +38,7 @@ dependencies {
         testImplementation("net.kyori:adventure-api:4.16.0")
     }
 
-    implementation("io.javalin:javalin:5.3.2")
+    implementation("io.javalin:javalin:6.1.3")
     implementation("club.minnced:discord-webhooks:0.8.2")
     compileOnly("com.google.code.gson:gson:2.10.1")
     testImplementation("com.google.code.gson:gson:2.10.1")
