@@ -1,4 +1,5 @@
 settings:
   webhook-url: ""  # Discord webhook URL
+  kofi-url: "https://ko-fi.com/empirewar"
   verification-token: ""  # Ko-Fi verification token
   port: 7000 # The port to start the webserver on

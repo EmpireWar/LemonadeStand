@@ -1,6 +1,6 @@
 name: LemonadeStand
 version: '${version}'
 main: org.empirewar.lemonadestand.LemonadeStand
-api-version: 1.19
-authors: [ StealWonders ]
+api-version: 1.20
+authors: [ SamB440, StealWonders ]
 description: Accept incoming Ko-Fi webhooks and allow further processing.

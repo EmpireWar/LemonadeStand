@@ -1,6 +1,9 @@
+import org.gradle.internal.impldep.org.eclipse.jgit.util.RawCharUtil.trimTrailingWhitespace
+
 plugins {
     // Apply the java Plugin to add support for Java.
     java
+    id("org.gradle.kotlin.kotlin-dsl")
     id("org.jetbrains.kotlin.jvm")
     id("io.github.goooler.shadow")
     id("com.diffplug.spotless")
@@ -40,6 +43,8 @@ dependencies {
 
     implementation("io.javalin:javalin:5.3.2")
     implementation("club.minnced:discord-webhooks:0.8.2")
+    compileOnly("com.google.code.gson:gson:2.10.1")
+    testImplementation("com.google.code.gson:gson:2.10.1")
     compileOnly("org.spongepowered:configurate-yaml:4.1.2")
     testImplementation("org.spongepowered:configurate-yaml:4.1.2")
     compileOnly("net.kyori:adventure-api")

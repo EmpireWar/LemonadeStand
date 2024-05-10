@@ -9,4 +9,4 @@ plugins {
 }
 
 rootProject.name = "LemonadeStand"
-include("common", "paper", "api:paper-api", "sponge")
+include("common", "paper", "api:paper-api", "sponge", "api:sponge-api")
