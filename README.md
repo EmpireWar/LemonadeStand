@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.empirewar.lemonadestand:LemonadeStand:1.0.0-SNAPSHOT")
+    compileOnly("org.empirewar.lemonadestand:PLATFORM:1.0.1-SNAPSHOT")
 }
 ```
 

@@ -1,3 +1,3 @@
 plugins {
-    id("buildlogic.java-common-conventions")
+    id("buildlogic.java-publish-conventions")
 }
