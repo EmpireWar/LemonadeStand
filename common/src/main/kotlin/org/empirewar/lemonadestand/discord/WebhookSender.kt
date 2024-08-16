@@ -61,7 +61,7 @@ class WebhookSender(private val plugin: LemonadeStand<*>) {
             .setTitle(
                 EmbedTitle(
                     "$playerName donated ${order.amount} ${order.currency}!",
-                    plugin.config().node("kofi-url").getString("")
+                    plugin.config().node("settings", "kofi-url").getString("")
                 )
             )
             .setThumbnailUrl("https://mc-heads.net/avatar/$playerId")
@@ -73,6 +73,6 @@ class WebhookSender(private val plugin: LemonadeStand<*>) {
     }
 
     companion object {
-        private const val WEBHOOK_URL_CONFIG_PATH = "settings.webhook-url"
+        private val WEBHOOK_URL_CONFIG_PATH = listOf("settings", "webhook-url")
     }
 }

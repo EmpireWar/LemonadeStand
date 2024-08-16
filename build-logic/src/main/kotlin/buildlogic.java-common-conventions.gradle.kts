@@ -31,7 +31,7 @@ repositories {
 project.version = "1.0.1-SNAPSHOT"
 
 dependencies {
-    implementation("io.javalin:javalin:6.1.3")
+    implementation("io.javalin:javalin:6.2.0")
     implementation("club.minnced:discord-webhooks:0.8.2")
     compileOnly("org.slf4j:slf4j-api:2.0.12")
     testImplementation("org.slf4j:slf4j-api:2.0.12")

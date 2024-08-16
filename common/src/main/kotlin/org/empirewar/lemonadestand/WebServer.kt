@@ -19,7 +19,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
     }
 
     init {
-        val token = plugin.config().getString(VERIFICATION_TOKEN_CONFIG_PATH)
+        val token = plugin.config().node(VERIFICATION_TOKEN_CONFIG_PATH).string
         val isDevelopment = token.isNullOrBlank()
         if (isDevelopment) {
             plugin.logger().warn("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.")
@@ -111,6 +111,6 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
     }
 
     companion object {
-        private const val VERIFICATION_TOKEN_CONFIG_PATH = "settings.verification-token"
+        private val VERIFICATION_TOKEN_CONFIG_PATH = listOf("settings", "verification-token")
     }
 }

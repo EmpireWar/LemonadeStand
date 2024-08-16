@@ -86,7 +86,7 @@ class LemonadeStandPaper: JavaPlugin(), LemonadeStand<OfflinePlayer>, Listener {
     private fun loadConfig() {
         try {
             val configPath: File = dataFolder.resolve("config.yml")
-            saveResource("config.yml", false)
+            saveResource("assets/lemonadestand/config.yml", false)
 
             loader = YamlConfigurationLoader.builder().path(configPath.toPath()).build()
             rootNode = loader.load()

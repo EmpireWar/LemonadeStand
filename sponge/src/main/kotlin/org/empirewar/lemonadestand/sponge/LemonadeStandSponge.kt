@@ -107,7 +107,7 @@ class LemonadeStandSponge @Inject constructor(
             val configPath: Path = dataFolder.resolve("config.yml")
             try {
                 Files.copy(
-                    pluginContainer!!.openResource(URI.create("/config.yml")).orElseThrow(),
+                    pluginContainer!!.openResource(URI.create("/assets/lemonadestand/config.yml")).orElseThrow(),
                     configPath
                 )
             } catch (ignored: FileAlreadyExistsException) {
