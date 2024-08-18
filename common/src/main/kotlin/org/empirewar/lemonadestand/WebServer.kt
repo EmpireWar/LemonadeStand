@@ -78,7 +78,7 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
     }
 
     private fun findPotentialUsername(str: String?): P? {
-        if (str == null) return null
+        if (str.isNullOrEmpty()) return null
 
         // Remove all prefixing spaces
         var message = str.replace("^\\s+".toRegex(), "")
