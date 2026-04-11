@@ -1,8 +1,10 @@
+import org.gradle.internal.impldep.org.eclipse.jgit.util.RawCharUtil.trimTrailingWhitespace
+
 plugins {
     // Apply the java Plugin to add support for Java.
     java
     id("org.jetbrains.kotlin.jvm")
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("com.diffplug.spotless")
 }
 
@@ -31,18 +33,18 @@ repositories {
 project.version = "1.0.1-SNAPSHOT"
 
 dependencies {
-    implementation("io.javalin:javalin:6.2.0") {
+    implementation("io.javalin:javalin:7.1.0") {
         exclude("org.slf4j")
     }
-    implementation("club.minnced:discord-webhooks:0.8.2") {
+    implementation("club.minnced:discord-webhooks:0.8.4") {
         exclude("org.slf4j")
     }
-    compileOnly("org.slf4j:slf4j-api:2.0.12")
-    testImplementation("org.slf4j:slf4j-api:2.0.12")
-    compileOnly("com.google.code.gson:gson:2.10.1")
-    testImplementation("com.google.code.gson:gson:2.10.1")
-    compileOnly("org.spongepowered:configurate-yaml:4.1.2")
-    testImplementation("org.spongepowered:configurate-yaml:4.1.2")
+    compileOnly("org.slf4j:slf4j-api:2.0.17")
+    testImplementation("org.slf4j:slf4j-api:2.0.17")
+    compileOnly("com.google.code.gson:gson:2.13.2")
+    testImplementation("com.google.code.gson:gson:2.13.2")
+    compileOnly("org.spongepowered:configurate-yaml:4.2.0")
+    testImplementation("org.spongepowered:configurate-yaml:4.2.0")
 }
 
 testing {
@@ -86,5 +88,7 @@ tasks {
         relocate("org.intellij.lang.annotations", "lemonadestand.libs.annotations")
         relocate("org.jetbrains.annotations", "lemonadestand.libs.jannotations")
         relocate("org.json", "lemonadestand.libs.json")
+        relocate("org.objectweb.asm", "lemonadestand.libs.asm")
+        relocate("jakarta", "lemonadestand.libs.jakarta")
     }
 }

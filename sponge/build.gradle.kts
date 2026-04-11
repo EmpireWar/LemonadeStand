@@ -3,7 +3,7 @@ import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
     id("buildlogic.java-common-conventions")
-    id("org.spongepowered.gradle.plugin") version("2.2.0")
+    id("org.spongepowered.gradle.plugin") version("2.3.1-SNAPSHOT")
 }
 
 dependencies {
@@ -12,7 +12,7 @@ dependencies {
 }
 
 sponge {
-    apiVersion("12.0.0-SNAPSHOT")
+    apiVersion("18.0.0-SNAPSHOT")
     loader {
         name(PluginLoaders.JAVA_PLAIN)
         version("1.0.0-SNAPSHOT")

@@ -15,25 +15,29 @@ class WebServer<P>(private val plugin: LemonadeStand<P>) {
         .create()
 
     private val app: Javalin = Javalin.create { config ->
-        config.showJavalinBanner = false
-    }
+        config.unsafe.startup.showJavalinBanner = false
 
-    init {
         val token = plugin.config().node(VERIFICATION_TOKEN_CONFIG_PATH).string
         val isDevelopment = token.isNullOrBlank()
         if (isDevelopment) {
             plugin.logger().warn("LemonadeStand has been started without a webhook verification token. It is highly advised to set one in the config.yml file.")
         }
 
-        app.post("/webhook") { ctx: Context ->
+        config.routes.post("/webhook") { ctx: Context ->
             // The Ko-Fi webhook sends the data as an urlencoded string
             val jsonBody = ctx.formParam("data")
             if (isDevelopment) plugin.logger().info("Received webhook: $jsonBody")
 
+            if (jsonBody == null) {
+                plugin.logger().warn("Failed to parse webhook (no body)")
+                ctx.status(400) // Return http status 400 Bad Request (invalid json)
+                return@post
+            }
+
             // Parse the webhook
             val shopOrder = gson.fromJson(jsonBody, ShopOrder::class.java)
             if (shopOrder == null) {
-                plugin.logger().warn("Failed to parse webhook")
+                plugin.logger().warn("Failed to parse webhook (no order)")
                 ctx.status(400) // Return http status 400 Bad Request (invalid json)
                 return@post
             }
