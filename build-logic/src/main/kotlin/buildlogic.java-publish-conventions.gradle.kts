@@ -15,6 +15,11 @@ java {
     withJavadocJar()
 }
 
+shadow {
+    // skip shadow jar from publishing.
+    addShadowVariantIntoJavaComponent = false
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -22,10 +27,6 @@ publishing {
             artifactId = project.name
             version = project.version.toString()
             from(components["java"])
-
-            // skip shadow jar from publishing. Workaround for https://github.com/johnrengelman/shadow/issues/651
-            val javaComponent = components["java"] as AdhocComponentWithVariants
-            javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) { skip() }
         }
     }
 
